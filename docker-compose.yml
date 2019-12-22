@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  sshtorum:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - './src:/src'
+    command: >
+      sh -c 'python main.py'
+
