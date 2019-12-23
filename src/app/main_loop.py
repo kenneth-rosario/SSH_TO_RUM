@@ -1,4 +1,5 @@
 from core import SSHConnection
+from core import Course
 from .channel_handler import ChannelHandler
 import time
 
@@ -29,15 +30,21 @@ class MainLoop:
 
             user_input = str(input("Enter the next class or write exit to exit : "))
 
-            if self.validate_class(user_input):
-                user_classes.append(user_input)
+            if user_input == 'exit':
+                continue
+
+            if  self.validate_class(user_input):
+                splitted = user_input.split('-')
+                user_classes.append(Course(class_code=splitted[0], section=splitted[1]))
             else:
                 print(f"Error processing class {user_input} make sure to follow correct naming convention")
 
         self.client.connect()
         self.loop_started = True
 
-        channel_handler  = ChannelHandler(channel = self.client.get_channel(), time = None, to_schedule = user_classes)
+        semester = input("1st Semester or Second Semester (1/2) ?")
+
+        channel_handler  = ChannelHandler(channel = self.client.get_channel(), time = None, to_schedule = user_classes, semester=semester)
 
         # Handle Channel Interaction
         channel_handler.start_loop()
